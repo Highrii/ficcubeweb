@@ -7,11 +7,19 @@
     <link rel="icon" href="logo1.png" type="image/png">
     <style>
         :root {
-            --bg-color: #ffffff;
+            --bg-color: #929292fa;
             --text-color: #333333;
             --card-bg: #f8f9fa;
             --primary: #6c757d;
             --hover: #5a6268;
+            --gradient-text: #333333;
+            --intro-text: #333333;
+            --tutorial-bg: rgba(255, 255, 255, 0.1);
+            --feature-bg: rgba(255, 255, 255, 0.05);
+            --popup-bg: rgba(255, 255, 255, 0.9);
+            --header-bg: rgba(255, 255, 255, 0.1);
+            --link-color: #333333;
+            --link-hover: rgb(0, 229, 255);
         }
 
         [data-theme="dark"] {
@@ -20,6 +28,14 @@
             --card-bg: #2d2d2d;
             --primary: #4e545a;
             --hover: #5a6268;
+            --gradient-text: #ffffff;
+            --intro-text: #f0f0f0;
+            --tutorial-bg: rgba(0, 0, 0, 0.4);
+            --feature-bg: rgba(255, 255, 255, 0.05);
+            --popup-bg: rgba(45, 45, 45, 0.9);
+            --header-bg: rgba(0, 0, 0, 0.2);
+            --link-color: #e0e0e0;
+            --link-hover: rgb(0, 187, 255);
         }
 
         body {
@@ -48,7 +64,7 @@
 
         /* 页眉 */
         .header-nav {
-            background: rgba(255,255,255,0.1);
+            background: var(--header-bg);
             backdrop-filter: blur(15px);
             padding: 0;  /* 更小的上下间距 */
             position: sticky;
@@ -185,7 +201,7 @@
             left: 50%;
             transform: translateX(-50%);
             padding: 1rem;
-            background: var(--card-bg);
+            background: var(--popup-bg);
             border-radius: 12px;
             box-shadow: 0 8px 16px rgba(0,0,0,0.1);
         }
@@ -196,25 +212,25 @@
 
         /* 优化文字样式 */
         h1, h2, h3 {
-            background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
+            background: linear-gradient(135deg, var(--gradient-text) 0%, var(--gradient-text) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             text-shadow: none;
         }
 
         a {
-            color: #e0e0e0;  /* 更亮的链接颜色 */
+            color: var(--link-color);
             text-decoration: none;
             transition: color 0.3s;
         }
 
         a:hover {
-            color: rgb(38, 255, 0);
+            color: var(--link-hover);
         }
 
         /* 添加教程区样式 */
         .tutorial-section {
-            background: rgba(0, 0, 0, 0.4);
+            background: var(--tutorial-bg);
             backdrop-filter: blur(8px);
             border-radius: 16px;
             padding: 2rem;
@@ -254,12 +270,12 @@
 
         /* 添加介绍区样式 */
         .intro-section {
-            background: rgba(0, 0, 0, 0.4);
+            background: var(--tutorial-bg);
             backdrop-filter: blur(8px);
             border-radius: 16px;
             padding: 2rem;
             margin-top: 2rem;
-            color: #f0f0f0;
+            color: var(--intro-text);
         }
 
         .intro-section p {
@@ -284,7 +300,7 @@
         }
 
         .feature-item {
-            background: rgba(255, 255, 255, 0.05);
+            background: var(--feature-bg);
             padding: 1rem;
             border-radius: 8px;
         }
@@ -423,10 +439,10 @@
         <div class="content-grid" style="grid-template-columns: 1fr;">
             <!-- 左侧链接 -->
             <div class="link-column">
-                <a href="https://www.yuque.com/ficcube" class="main-link" target="_blank">📚 Wiki文档</a>
-                <a href="#" class="main-link">👥 QQ交流群</a>
-                <a href="#" class="main-link">💬 QQ频道/贴吧</a>
-                <a href="#" class="main-link">📃 更新日志</a>
+                <a href="https://www.yuque.com/yuqueyonghucgups9/ficcube" class="main-link" target="_blank">📚 Wiki文档</a>
+                <a href="https://qm.qq.com/q/GV9NgkEZUY" class="main-link" target="_blank">👥 QQ交流群</a>
+                <a href="https://pd.qq.com/s/gymi21bmj" class="main-link" target="_blank">💬 QQ频道/贴吧</a>
+                <a href="https://www.yuque.com/yuqueyonghucgups9/ficcube/sr73e34scft49g0w" class="main-link" target="_blank">📃 更新日志</a>
                 <a href="https://afdian.com/a/highrii" class="main-link" target="_blank">💎 赞助充值</a>
             </div>
         </div>
@@ -491,11 +507,11 @@
     <footer class="footer">
         <div class="main-container">
             <div style="display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap;">
-                <a href="#">友情链接1</a>
-                <a href="#">友情链接2</a>
-                <a href="#">友情链接3</a>
-                <a href="#">友情链接4</a>
-                <a href="#">友情链接5</a>
+                <a href="https://space.bilibili.com/306399149" target="_blank">哔哩哔哩官方账号</a>
+                <a href="#" target="_blank">友情链接2</a>
+                <a href="#" target="_blank">友情链接3</a>
+                <a href="#" target="_blank">友情链接4</a>
+                <a href="#" target="_blank">友情链接5</a>
             </div>
         </div>
     </footer>
