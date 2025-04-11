@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FicCube - 幻像立方</title>
+    <title>FicCube</title>
+    <link rel="icon" href="logo1.png" type="image/png">
     <style>
         :root {
             --bg-color: #ffffff;
@@ -299,6 +300,71 @@
 
         .warning-notice a:hover {
             color: #ff6666;
+        }
+
+        /* 添加移动端适配 */
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 1rem;
+            }
+
+            .title-section h1 {
+                font-size: 2rem;
+            }
+
+            .title-logo {
+                max-width: 300px;
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .link-column {
+                flex-direction: column;
+            }
+
+            .main-link {
+                width: 100%;
+                text-align: center;
+            }
+
+            .tutorial-section {
+                grid-template-columns: 1fr;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header-content {
+                flex-direction: column;
+                padding: 0.5rem 0;
+            }
+
+            .business-links {
+                margin-top: 1rem;
+            }
+
+            .server-status {
+                margin-right: 0;
+            }
+
+            .float-btns {
+                bottom: 1rem;
+                right: 1rem;
+            }
+
+            .qrcode-popup {
+                left: auto;
+                right: 0;
+                transform: none;
+            }
+
+            .header-nav {
+                position: relative;
+            }
         }
     </style>
 </head>
