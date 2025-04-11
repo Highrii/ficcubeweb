@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>服务器列表</title>
+    <style>
+        /* 页面整体样式 */
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+            margin: 0;
+            height: 100vh;
+            overflow: hidden; /* 防止滚动条出现 */
+            position: relative;
+        }
+
+        /* 设置背景 */
+        .background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('背景.png');
+            background-size: cover;
+            background-position: center;
+            filter: blur(5px); /* 高斯模糊效果 */
+            z-index: -1; /* 背景放置在最底层 */
+        }
+
+        /* 服务器列表容器 */
+        .content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .server-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .server-status {
+            width: 300px;
+            padding: 20px;
+            margin: 10px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.5); /* 半透明背景 */
+            text-align: left;
+        }
+
+        img {
+            width: 64px;
+            height: 64px;
+        }
+
+        .server-info {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 背景 -->
+    <div class="background"></div>
+
+    <div class="content">
+        <h1>像素山农服务器列表</h1>
+        <div class="server-container" id="servers">
+            <!-- 服务器状态将在这里生成 -->
+        </div>
+    </div>
+
+    <script>
+        // 服务器地址列表
+        const servers = [
+            { address: "ccxltv.acgrip.fun:25565" },
+            { address: "ccxltv.acgrip.fun:25566" },
+            { address: "sdau.ficcube.com" },
+            { address: "ac.rainplay.cn" },
+            { address: "xyz.simpfun.cn" },
+            { address: "mc.hypixel.net" },
+        ];
+
+        const apiBaseUrl = "https://api.mcstatus.io/v2/status/java/"; // API基础URL
+        const updateInterval = 1000; // 1秒更新一次
+
+        function createServerCard(server) {
+            const serverDiv = document.createElement('div');
+            serverDiv.className = 'server-status';
+            serverDiv.innerHTML = `
+                <img id="icon-${server.address}" src="" alt="服务器图标" />
+                <div class="server-info">
+                    <strong>服务器地址:</strong> <span>${server.address}</span><br>
+                    <strong>MOTD:</strong> <span id="motd-${server.address}"></span><br>
+                    <strong>在线人数:</strong> <span id="players-${server.address}"></span><br>
+                    <strong>延迟 (Ping):</strong> <span id="latency-${server.address}"></span> ms
+                </div>
+            `;
+            document.getElementById('servers').appendChild(serverDiv);
+        }
+
+        function updateServerStatus(server) {
+            const apiUrl = `${apiBaseUrl}${server.address}`;
+            
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data); // 调试时打印 API 响应
+
+                    if (data.online) {
+                        document.getElementById(`motd-${server.address}`).innerHTML = data.motd.clean || "N/A";
+                        document.getElementById(`players-${server.address}`).textContent = `${data.players.online}/${data.players.max}`;
+                        
+                        // 处理 latency
+                        if (data.latency) {
+                            document.getElementById(`latency-${server.address}`).textContent = data.latency;
+                        } else {
+                            document.getElementById(`latency-${server.address}`).textContent = "N/A"; // 如果未返回 latency，则显示 N/A
+                        }
+                        
+                        document.getElementById(`icon-${server.address}`).src = data.icon ? data.icon : "https://via.placeholder.com/64";
+                    } else {
+                        document.getElementById(`motd-${server.address}`).textContent = "服务器离线";
+                        document.getElementById(`players-${server.address}`).textContent = "N/A";
+                        document.getElementById(`latency-${server.address}`).textContent = "N/A";
+                        document.getElementById(`icon-${server.address}`).src = "https://via.placeholder.com/64";
+                    }
+                })
+                .catch(error => {
+                    console.error("Error fetching server data:", error);
+                    document.getElementById(`motd-${server.address}`).textContent = "无法获取数据";
+                    document.getElementById(`players-${server.address}`).textContent = "N/A";
+                    document.getElementById(`latency-${server.address}`).textContent = "N/A";
+                    document.getElementById(`icon-${server.address}`).src = "https://via.placeholder.com/64";
+                });
+        }
+
+        function initializeServers() {
+            servers.forEach(server => {
+                createServerCard(server);
+                updateServerStatus(server);
+            });
+        }
+
+        function refreshServers() {
+            servers.forEach(server => {
+                updateServerStatus(server);
+            });
+        }
+
+        // 初始化页面时创建每个服务器的卡片
+        initializeServers();
+        // 每1秒更新一次所有服务器的状态
+        setInterval(refreshServers, updateInterval);
+    </script>
+</body>
+</html>
