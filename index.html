@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FicCube - 幻像立方</title>
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #333333;
+            --card-bg: #f8f9fa;
+            --primary: #6c757d;
+            --hover: #5a6268;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1a1a1a;
+            --text-color: #e0e0e0;
+            --card-bg: #2d2d2d;
+            --primary: #4e545a;
+            --hover: #5a6268;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            margin: 0;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* 背景图层 */
+        .background-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url('bg.jpg');
+            background-size: cover;
+            background-position: center;
+            filter: blur(10px);
+            z-index: -1;
+            opacity: 1;
+            transition: opacity 0.5s;
+        }
+
+        /* 页眉 */
+        .header-nav {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(15px);
+            padding: 0;  /* 更小的上下间距 */
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-logo img {
+            height: 50px;
+            width: auto;
+        }
+
+        .server-status {
+            color: #f5f5f5;  /* 更亮的状态文字 */
+            font-size: 0.9rem;
+            margin-right: 2rem;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .title-logo {
+            max-width: 600px;
+            width: 100%;
+            height: auto;
+            margin-bottom: 2rem;
+        }
+
+        /* 主内容区 */
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+        }
+
+        /* 标题区 */
+        .title-section {
+            text-align: center;
+            margin: 0.5rem 0;  /* 减小上下间距 */
+            padding: 1rem;
+            background: rgba(var(--card-bg), 0.8);
+            border-radius: 16px;
+            color: #f0f0f0;  /* 更亮的文字颜色 */
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);  /* 添加文字阴影 */
+        }
+
+        /* 双栏布局 */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        /* 链接按钮组 */
+        .link-column {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .main-link {
+            padding: 0.8rem 1.5rem;
+            background: var(--primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .main-link:hover {
+            background: var(--hover);
+            transform: translateY(-2px);
+        }
+
+        /* 状态信息栏 */
+        .status-column {
+            position: sticky;
+            top: 120px;
+            height: fit-content;
+        }
+
+        /* 页脚 */
+        .footer {
+            margin-top: 5rem;
+            padding: 3rem 0;
+            border-top: 1px solid var(--primary);
+        }
+
+        /* 功能按钮 */
+        .float-btns {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .theme-btn, .top-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: none;
+            background: var(--primary);
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+        }
+
+        /* 商务合作弹窗 */
+        .qrcode-popup {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 1rem;
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+
+        .business-item:hover .qrcode-popup {
+            display: block;
+        }
+
+        /* 优化文字样式 */
+        h1, h2, h3 {
+            background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: none;
+        }
+
+        a {
+            color: #e0e0e0;  /* 更亮的链接颜色 */
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        a:hover {
+            color: rgb(38, 255, 0);
+        }
+
+        /* 添加教程区样式 */
+        .tutorial-section {
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(8px);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-top: 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .tutorial-steps {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .tutorial-steps li {
+            margin: 0.8rem 0;
+            padding: 0.8rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        .tutorial-gif {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .tutorial-steps .sub-step {
+            margin-left: 2.5rem;
+            margin-top: 0.5rem;
+            color: #ccc;
+        }
+
+        /* 添加介绍区样式 */
+        .intro-section {
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(8px);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-top: 2rem;
+            color: #f0f0f0;
+        }
+
+        .intro-section p {
+            line-height: 1.8;
+            margin: 0.5rem 0;
+            text-align: justify;
+        }
+
+        .value-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1rem 0;
+            border-left: 4px solid #26ff00;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .feature-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1rem;
+            border-radius: 8px;
+        }
+
+        .warning-notice {
+            background: rgba(255, 0, 0, 0.1);
+            border-left: 4px solid #ff4444;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+        }
+
+        .warning-notice a {
+            color: #ff4444;
+            text-decoration: underline;
+        }
+
+        .warning-notice a:hover {
+            color: #ff6666;
+        }
+    </style>
+</head>
+<body>
+    <!-- 背景图层 -->
+    <div class="background-layer" id="backgroundLayer"></div>
+
+    <!-- 页眉导航 -->
+    <nav class="header-nav">
+        <div class="main-container">
+            <div class="header-content">
+                <div class="header-logo">
+                    <img src="logo64.png" alt="Logo">
+                    <div class="server-status" id="statusDetail">检测中...</div>
+                </div>
+                <div class="business-links" style="display: flex; gap: 2rem;">
+                    <div class="business-item">
+                        <a href="#" style="position: relative;">
+                            商务合作
+                            <div class="qrcode-popup">
+                                <img src="qrcode.png" alt="二维码" width="160">
+                            </div>
+                        </a>
+                    </div>
+                    <div class="business-item">
+                        <a href="#" style="position: relative;">
+                            人工客服
+                            <div class="qrcode-popup">
+                                <img src="qrcode.png" alt="二维码" width="160">
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <!-- 标题区 -->
+        <div class="title-section">
+            <img src="logo2048.png" alt="FicCube Logo" class="title-logo">
+            <h1 style="margin:0;font-size:3rem;">幻像立方</h1>
+            <p style="opacity:0.8;margin-top:0.5rem;">国际Java版Minecraft服务器</p>
+        </div>
+
+        <!-- 链接区 -->
+        <div class="content-grid" style="grid-template-columns: 1fr;">
+            <!-- 左侧链接 -->
+            <div class="link-column">
+                <a href="https://www.yuque.com/ficcube" class="main-link" target="_blank">📚 Wiki文档</a>
+                <a href="#" class="main-link">👥 QQ交流群</a>
+                <a href="#" class="main-link">💬 QQ频道/贴吧</a>
+                <a href="#" class="main-link">📃 更新日志</a>
+                <a href="https://afdian.com/a/highrii" class="main-link" target="_blank">💎 赞助充值</a>
+            </div>
+        </div>
+
+        <!-- 修改教程区内容 -->
+        <div class="tutorial-section">
+            <div>
+                <h2>🎮 快速开始</h2>
+                <ol class="tutorial-steps">
+                    <li>启动 Minecraft 1.20.6</li>
+                    <li>多人游戏 → 添加服务器</li>
+                    <li>地址：mc.ficcube.com</li>
+                    <li>保存并进入，开始旅程！</li>
+                </ol>
+            </div>
+            <img src="tutorial.gif" alt="加入教程" class="tutorial-gif">
+        </div>
+
+        <!-- 在教程区后添加介绍内容 -->
+        <div class="intro-section">
+            <h2>价值观与愿景</h2>
+            <p>FicCube 适合每个人；与他人一起玩游戏应该是安全和包容的，这里没有仇恨和歧视的容身之地；我们是Minecraft社区的建设者和维护者，义务地维持这个社区使其充满活力和热情。</p>
+            
+
+            <h2>关于 FicCube</h2>
+            <div class="warning-notice">
+                <p>在您加入FicCube服务器前请熟知<a href="https://www.yuque.com/yuqueyonghucgups9/ficcube/dd7tzh7n7v3lc2w8" target="_blank">《FC管理办法》</a>协议，当您加入服务器时即默认您已并同意该协议的全部条款，并同意承担违反相关条款可能产生的一切后果。</p>
+            </div>
+            <p>FC是一个多元的Minecraft（JAVA版）国际版服务器群组，规划为多元开放Minecraft中文游戏社区。FicCube中的Fic取自Fiction意为幻像、虚构；Cube意为立方。</p>
+            
+            <p>服务器遵循Mojang（微软）EULA协议和Minecraft使用准则，开启官方账号验证，玩家须使用JAVA版官方客户端进入游玩。</p>
+
+            <div class="features-grid">
+                <div class="feature-item">
+                    <h4>🏰 丰富社交系统</h4>
+                    <p>公会、地标、领地、经济、自由交易</p>
+                </div>
+                <div class="feature-item">
+                    <h4>🌿 养老圣地</h4>
+                    <p>农业、垂钓、酿造等等丰富养老玩法</p>
+                </div>
+                <div class="feature-item">
+                    <h4>⚔️ 冒险玩法</h4>
+                    <p>史诗地形、战斗副本、装备系统、进阶养成</p>
+                </div>
+                <div class="feature-item">
+                    <h4>🎨 原汁原味体验</h4>
+                    <p>原版材质、东方美学设计</p>
+                </div>
+                <div class="feature-item">
+                    <h4>💻 低配优化</h4>
+                    <p>原版秒进，无需等待、独家发包优化，低配畅玩</p>
+                </div>
+                <div class="feature-item">
+                    <h4>🛡️ 安全保障</h4>
+                    <p>领地保护、备份回滚、反作弊、管理监管</p>
+                </div>
+            </div>
+        </div>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="main-container">
+            <div style="display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap;">
+                <a href="#">友情链接1</a>
+                <a href="#">友情链接2</a>
+                <a href="#">友情链接3</a>
+                <a href="#">友情链接4</a>
+                <a href="#">友情链接5</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 功能按钮组 -->
+    <div class="float-btns">
+        <button class="theme-btn" id="themeToggle">🌓</button>
+        <button class="top-btn" id="toTop">↑</button>
+    </div>
+
+    <script>
+        // 主题切换
+        const themeToggle = document.getElementById('themeToggle');
+        let currentTheme = localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.body.setAttribute('data-theme', currentTheme);
+        themeToggle.textContent = currentTheme === 'dark' ? '🌙' : '🌞';
+
+        themeToggle.addEventListener('click', () => {
+            currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.body.setAttribute('data-theme', currentTheme);
+            themeToggle.textContent = currentTheme === 'dark' ? '🌙' : '🌞';
+            localStorage.setItem('theme', currentTheme);
+        });
+
+        // 返回顶部
+        const toTopBtn = document.getElementById('toTop');
+        window.addEventListener('scroll', () => {
+            toTopBtn.style.opacity = window.scrollY > 500 ? 1 : 0;
+        });
+        toTopBtn.addEventListener('click', () => {
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        });
+
+        // 背景透明度控制
+        const bgLayer = document.getElementById('backgroundLayer');
+        window.addEventListener('scroll', () => {
+            const scrollY = window.scrollY;
+            const opacity = Math.max(1 - scrollY / 600, 0);
+            bgLayer.style.opacity = opacity;
+        });
+
+        // 服务器状态检测
+        async function checkStatus() {
+            try {
+                const res = await fetch('https://api.mcstatus.io/v2/status/java/hypixel.net');
+                const data = await res.json();
+                const statusEl = document.getElementById('statusDetail');
+                
+                if(data.online) {
+                    statusEl.innerHTML = `
+                        <p style="margin:0.5rem 0;">服务器地址：mc.ficcube.com</p>
+                        <p style="color: #26ff00; margin:0.5rem 0;">🟢 当前在线：${data.players.online}</p>
+                    `;
+                } else {
+                    statusEl.innerHTML = `<p style="color: #F44336; margin:0;">🔴 服务器离线</p>`;
+                }
+            } catch(err) {
+                document.getElementById('statusDetail').innerHTML = `<p style="color: #FF9800;">状态检测失败</p>`;
+            }
+        }
+        checkStatus();
+    </script>
+</body>
+</html>
