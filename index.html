@@ -120,6 +120,7 @@
             justify-content: center;
             gap: 1rem;
             flex-wrap: wrap;
+            width: 100%; /* 添加宽度限制 */
         }
 
         .main-link {
@@ -130,6 +131,9 @@
             border-radius: 8px;
             font-size: 0.9rem;
             transition: all 0.2s;
+            max-width: 100%; /* 添加最大宽度限制 */
+            box-sizing: border-box; /* 确保padding不会导致宽度溢出 */
+            white-space: nowrap; /* 防止文字换行 */
         }
 
         .main-link:hover {
@@ -323,11 +327,16 @@
 
             .link-column {
                 flex-direction: column;
+                padding: 0; /* 移除内边距 */
+                width: 100%; /* 确保宽度100% */
+                align-items: center; /* 确保子元素居中 */
             }
 
             .main-link {
-                width: 100%;
-                text-align: center;
+                width: 90%; /* 使用百分比宽度 */
+                max-width: 300px; /* 限制最大宽度 */
+                margin: 0; /* 移除外边距 */
+                text-align: center; /* 文字居中 */
             }
 
             .tutorial-section {
