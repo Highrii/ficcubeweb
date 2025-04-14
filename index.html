@@ -595,13 +595,27 @@
     </div>
 
     <script>
-        // 页面加载完成后隐藏加载动画
-        window.addEventListener('load', () => {
+        // 页面加载完成后隐藏加载动画（优化版本）
+        function hideLoader() {
             const loaderWrapper = document.querySelector('.loader-wrapper');
-            setTimeout(() => {
-                loaderWrapper.classList.add('fade-out');
-            }, 500); // 500ms 延迟以确保动画效果显示完整
+            if (loaderWrapper) {
+                setTimeout(() => {
+                    loaderWrapper.classList.add('fade-out');
+                    // 确保动画完成后移除加载器
+                    setTimeout(() => {
+                        loaderWrapper.style.display = 'none';
+                    }, 500);
+                }, 500);
+            }
+        }
+
+        // 使用多个事件来确保加载动画能被正确移除
+        ['load', 'DOMContentLoaded'].forEach(event => {
+            window.addEventListener(event, hideLoader);
         });
+
+        // 兜底方案：如果6秒后还没隐藏，强制隐藏
+        setTimeout(hideLoader, 6000);
 
         // 主题切换
         const themeToggle = document.getElementById('themeToggle');
