@@ -95,6 +95,12 @@
             font-size: 0.9rem;
             margin-right: 2rem;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+            background-color: rgba(128, 128, 128, 0.2);
+            padding: 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            position: relative;
         }
 
         .title-logo {
@@ -533,9 +539,10 @@
         <div class="main-container">
             <div class="header-content">
                 <div class="header-logo">
-                    <img src="image/logo200.png" alt="Logo">
-                    <div class="server-status" id="statusDetail">检测中...</div>
-                </div>
+            <img src="image/logo200.png" alt="Logo">
+            <div class="server-status" id="statusDetail" title="点击复制服务器地址">状态检测中</div>
+            <div id="copyNotification" style="display: none; position: absolute; background: rgba(0, 0, 0, 0.8); color: white; padding: 8px; border-radius: 4px; font-size: 0.8rem; top: 100%; left: 50%; transform: translateX(-50%); margin-top: 8px;">地址已复制到剪贴板</div>
+        </div>
                 <div class="business-links" style="display: flex; gap: 2rem;">
                     <div class="business-item">
                         <a href="#" style="position: relative;">
@@ -687,6 +694,26 @@
         <p style="text-align: center; font-size: 0.8rem; color: var(--text-color); opacity: 0.6;">本网站不是官方 Minecraft 网站，与 Mojang Studios 或 Microsoft 没有关联。所有产品名称和公司名称均为其各自持有者的商标或注册商标。使用这些名称并不表示与它们有任何关联或得到它们的认可。</p>
     </footer>
 
+    <script>
+        document.getElementById('statusDetail').addEventListener('click', function() {
+            navigator.clipboard.writeText('mc.ficcube.com').then(function() {
+                const notification = document.getElementById('copyNotification');
+                notification.style.display = 'block';
+                setTimeout(function() {
+                    notification.style.display = 'none';
+                }, 2000);
+            });
+        });
+
+        document.getElementById('statusDetail').addEventListener('mouseover', function() {
+            this.style.backgroundColor = 'rgba(128, 128, 128, 0.3)';
+        });
+
+        document.getElementById('statusDetail').addEventListener('mouseout', function() {
+            this.style.backgroundColor = 'rgba(128, 128, 128, 0.2)';
+        });
+    </script>
+
     <!-- 功能按钮组 -->
     <div class="float-btns">
         <button class="theme-btn" id="themeToggle">🌓</button>
@@ -733,11 +760,11 @@
                 
                 if(data.online) {
                     statusEl.innerHTML = `
-                        <p style="margin:0.5rem 0;">服务器地址：mc.ficcube.com</p>
-                        <p style="color: #26ff00; margin:0.5rem 0;">🟢 当前在线：${data.players.online}</p>
+                        <p style="margin:0.1em;">服务器地址：mc.FicCube.com</p>
+                        <p style="color: #36bd0d; margin:0.1em;">当前在线：${data.players.online}</p>
                     `;
                 } else {
-                    statusEl.innerHTML = `<p style="color: #F44336; margin:0;">🔴 服务器离线</p>`;
+                    statusEl.innerHTML = `<p style="color: #F44336; margin:0;">服务器离线</p>`;
                 }
             } catch(err) {
                 document.getElementById('statusDetail').innerHTML = `<p style="color: #FF9800;">状态检测失败</p>`;
