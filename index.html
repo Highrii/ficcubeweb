@@ -1,0 +1,924 @@
+<!--  版权所有，严禁恶意分发网站源码  Designed by Highrii -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>FicCube 幻像立方</title>
+    <link rel="icon" href="image/logo64.png" type="image/png">
+    <style>
+        :root {
+            --bg-color: #1a1a1a;
+            --text-color: #e0e0e0;
+            --card-bg: #2d2d2d;
+            --primary: #4e545a;
+            --hover: #5a6268;
+            --gradient-text: #ffffff;
+            --intro-text: #f0f0f0;
+            --tutorial-bg: rgba(0, 0, 0, 0.4);
+            --feature-bg: rgba(255, 255, 255, 0.05);
+            --popup-bg: rgba(45, 45, 45, 0.9);
+            --header-bg: rgba(0, 0, 0, 0.2);
+            --link-color: #e0e0e0;
+            --link-hover: rgb(0, 187, 255);
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            margin: 0;
+        }
+
+        /* 背景图层 */
+        .background-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url('image/bg.jpg');
+            background-size: cover;
+            background-position: center;
+            filter: blur(7px);
+            z-index: -1;
+            opacity: 1;
+            transition: opacity 0.5s;
+        }
+
+        /* 页眉 */
+        .header-nav {
+            background: var(--header-bg);
+            backdrop-filter: blur(15px);
+            padding: 0;  /* 更小的上下间距 */
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-logo img {
+            height: 50px;
+            width: auto;
+        }
+
+        .server-status {
+            color: #f5f5f5;  /* 更亮的状态文字 */
+            font-size: 0.9rem;
+            margin-right: 2rem;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+            background-color: rgba(128, 128, 128, 0.2);
+            padding: 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            position: relative;
+        }
+
+        .title-logo {
+            max-width: 400px;
+            width: 100%;
+            height: auto;
+            margin-bottom: 2rem;
+        }
+
+        /* 主内容区 */
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0.5rem;
+            position: relative;
+        }
+
+        /* 标题区 */
+        .title-section {
+            text-align: center;
+            margin: 1rem 0;  /* 减小上下间距 */
+            padding-top: 3rem;  /* 增加顶部padding */
+            background: rgba(var(--card-bg), 0.8);
+            border-radius: 16px;
+            color: #f0f0f0;  /* 更亮的文字颜色 */
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);  /* 添加文字阴影 */
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;  /* 减小间距 */
+            margin: 3rem;  /* 减小上下margin */
+        }
+
+        /* 链接按钮组 */
+        .link-column {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            width: 100%; /* 添加宽度限制 */
+        }
+
+        .main-link {
+            padding: 0.8rem 1.5rem;
+            background: var(--primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            max-width: 100%; /* 添加最大宽度限制 */
+            box-sizing: border-box; /* 确保padding不会导致宽度溢出 */
+            white-space: nowrap; /* 防止文字换行 */
+        }
+
+        .main-link:hover {
+            background: var(--hover);
+            transform: translateY(-2px);
+        }
+
+        /* 状态信息栏 */
+        .status-column {
+            position: sticky;
+            top: 120px;
+            height: fit-content;
+        }
+
+        /* 页脚 */
+        .footer {
+            margin-top: 4rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--primary);
+        }
+
+        /* 功能按钮 */
+        .float-btns {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .theme-btn, .top-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: none;
+            background: var(--primary);
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+        }
+
+        /* 商务合作弹窗 */
+        .qrcode-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.9);
+            padding: 0;
+            background: transparent;
+            border-radius: 16px;
+            z-index: 1000;
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .qrcode-popup.active {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .qrcode-popup img {
+            max-width: 240px;
+            height: auto;
+            border-radius: 16px;
+            display: block;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0);
+            z-index: 999;
+            transition: background 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .business-item a {
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .business-item a:hover {
+            color: var(--link-hover);
+        }
+
+        /* 优化文字样式 */
+        h1, h2, h3 {
+            background: linear-gradient(135deg, var(--gradient-text) 0%, var(--gradient-text) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: none;
+        }
+
+        a {
+            color: var(--link-color);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        a:hover {
+            color: var(--link-hover);
+        }
+
+        /* 添加教程区样式 */
+        .tutorial-section {
+            background: var(--tutorial-bg);
+            backdrop-filter: blur(8px);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-top: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .tutorial-content {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .tutorial-image {
+            flex: 1;
+            min-width: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .tutorial-gif {
+            width: 100%;
+            max-width: 500px;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .tutorial-steps {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .tutorial-steps li {
+            margin: 0.8rem 0;
+            padding: 0.8rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        .tutorial-steps .sub-step {
+            margin-left: 2.5rem;
+            margin-top: 0.5rem;
+            color: #ccc;
+        }
+
+        /* 添加介绍区样式 */
+        .intro-section {
+            background: var(--tutorial-bg);
+            backdrop-filter: blur(8px);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-top: 2rem;
+            color: var(--intro-text);
+        }
+
+        .intro-section p {
+            line-height: 1.8;
+            margin: 0.5rem 0;
+            text-align: justify;
+        }
+        
+        .intro-section h2 {
+            margin-bottom: 0.5rem;
+        }
+
+        .value-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1rem 0;
+            border-left: 4px solid #26ff00;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .feature-item {
+            background: var(--feature-bg);
+            padding: 1rem;
+            border-radius: 8px;
+        }
+
+        .warning-notice {
+            flex-basis: 100%;
+            background: rgba(255, 0, 0, 0.1);
+            border-left: 4px solid #ff4444;
+            padding: 0 2em 0;
+            border-radius: 8px;
+        }
+
+        .warning-notice a {
+            color: #ff4444;
+        }
+
+        .warning-notice a:hover {
+            color: #ff6666;
+        }
+
+        /* 图集册滚动样式 */
+        .showcase-section {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+            background: var(--tutorial-bg);
+            backdrop-filter: blur(8px);
+            border-radius: 16px;
+            padding: 2rem;
+        }
+
+        .showcase-slider {
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            height: 300px;
+        }
+
+        .slider-container {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+
+        .slider-item {
+            min-width: 100%;
+            height: 300px;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .slider-nav {
+            position: absolute;
+            bottom: 1rem;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .slider-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.5);
+            cursor: pointer;
+        }
+
+        .slider-dot.active {
+            background: white;
+        }
+
+        .showcase-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .showcase-content h2 {
+            margin-top: 0.1rem;
+        }
+
+        .showcase-content p {
+            margin: 0.1rem 0;  /* 减小段落间距 */
+            line-height: 1.5;  /* 适当减小行高 */
+            font-size: 0.9rem;  /* 减小正文字号 */
+        }
+
+        /* 添加移动端适配 */
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 1rem;
+            }
+
+            .header-content {
+                flex-direction: column;
+                align-items: center;
+                padding: 0.5rem;
+                gap: 0.5rem;
+            }
+
+            .header-logo {
+                margin-bottom: 0;
+                justify-content: center;
+                width: 100%;
+            }
+            
+            .header-logo img {
+                display: none;
+            }
+            
+            .server-status {
+                margin-right: 0;
+                text-align: center;
+                font-size: 0.8rem;
+                padding: 0.3rem 0.6rem;
+            }
+
+            .business-links {
+                display: flex !important;
+                flex-direction: row !important;
+                gap: 1.5rem !important;
+                margin: 0;
+                padding: 0;
+            }
+
+            .business-item a {
+                font-size: 0.9rem;
+                padding: 0;
+                background: none;
+                color: var(--link-color);
+                border-radius: 0;
+                display: inline-block;
+                white-space: nowrap;
+            }
+
+            .business-item a:hover {
+                background: none;
+                color: var(--link-hover);
+            }
+
+            .title-logo {
+                max-width: 250px;
+            }
+
+            .title-section h1 {
+                font-size: 2rem;
+            }
+
+            .link-column {
+                flex-direction: column;
+                gap: 0.8rem;
+            }
+
+            .main-link {
+                width: 100%;
+                max-width: none;
+                text-align: center;
+                padding: 0.8rem;
+                font-size: 1rem;
+            }
+
+            .showcase-section {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+                padding: 1rem;
+            }
+
+            .showcase-slider {
+                height: 200px;
+            }
+
+            .slider-item {
+                height: 200px;
+            }
+
+            .showcase-content h2 {
+                font-size: 1.5rem;
+                margin-top: 1rem;
+            }
+
+            .intro-section {
+                padding: 1rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 0.8rem;
+            }
+
+            .feature-item {
+                padding: 0.8rem;
+            }
+
+            .tutorial-section {
+                padding: 1rem;
+            }
+
+            .tutorial-content, .tutorial-image {
+                flex: 1 1 100%;
+            }
+
+            .tutorial-gif {
+                max-width: 100%;
+            }
+
+            .float-btns {
+                bottom: 1rem;
+                right: 1rem;
+            }
+
+            .theme-btn, .top-btn {
+                width: 40px;
+                height: 40px;
+            }
+
+            .footer {
+                padding-top: 3rem;
+            }
+
+            /* 移动端弹窗优化 */
+            .qrcode-popup {
+                width: 90%;
+                max-width: 300px;
+            }
+
+            .qrcode-popup img {
+                max-width: 100%;
+                height: auto;
+            }
+
+            /* 优化移动端触摸体验 */
+            .modal-overlay {
+                -webkit-tap-highlight-color: transparent;
+            }
+
+            .qrcode-popup {
+                touch-action: manipulation;
+            }
+        }
+
+        /* 添加平板设备的响应式样式 */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .main-container {
+                padding: 1.5rem;
+            }
+
+            .title-logo {
+                max-width: 300px;
+            }
+
+            .showcase-section {
+                grid-template-columns: 1fr;
+            }
+
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .qrcode-popup {
+                width: auto;
+                max-width: 280px;
+            }
+        }
+
+        /* 添加横屏模式优化 */
+        @media (max-width: 768px) and (orientation: landscape) {
+            .qrcode-popup {
+                max-width: 200px;
+            }
+
+            .header-content {
+                flex-direction: row;
+                padding: 0.5rem 1rem;
+            }
+
+            .business-links {
+                flex-direction: row !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 背景图层 -->
+    <div class="background-layer" id="backgroundLayer"></div>
+
+    <!-- 页眉导航 -->
+    <nav class="header-nav">
+        <div class="main-container">
+            <div class="header-content">
+                <div class="header-logo">
+            <img src="image/logo200.png" alt="Logo">
+            <div class="server-status" id="statusDetail" title="点击复制服务器地址">状态检测中</div>
+            <div id="copyNotification" style="display: none; position: absolute; background: rgba(0, 0, 0, 0.8); color: white; padding: 8px; border-radius: 4px; font-size: 0.8rem; top: 100%; left: 50%; transform: translateX(-50%); margin-top: 8px;">地址已复制到剪贴板</div>
+        </div>
+                <div class="business-links" style="display: flex; gap: 2rem;">
+                    <div class="business-item">
+                        <a href="javascript:void(0)" onclick="showQRCode('business')">商务合作</a>
+                    </div>
+                    <div class="business-item">
+                        <a href="javascript:void(0)" onclick="showQRCode('service')">人工客服</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 二维码弹窗 -->
+    <div class="modal-overlay" id="modalOverlay"></div>
+    <div class="qrcode-popup" id="businessQR">
+        <img src="image/qrcode.png" alt="商务合作二维码">
+    </div>
+    <div class="qrcode-popup" id="serviceQR">
+        <img src="image/qrcode.png" alt="人工客服二维码">
+    </div>
+    <!-- 地图选项弹窗 -->
+    <div class="qrcode-popup" id="mapOptionsPopup" style="background: var(--popup-bg); padding: 1.5rem; width: 300px;">
+        <!-- <h3 style="text-align: center; margin-top: 0;">选择地图</h3> -->
+        <div style="display: flex; flex-direction: column; gap: 1rem;">
+            <a href="map1/index.html" class="main-link" target="_blank" style="text-align: center;">🗺️ 冒险一区</a>
+            <a href="" class="main-link" target="_blank" style="text-align: center;">🗺️ 冒险二区</a>
+            <a href="" class="main-link" target="_blank" style="text-align: center;">🗺️ 冒险三区</a>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <!-- 标题区 -->
+        <div class="title-section">
+            <img src="image/logo2048.png" alt="FicCube Logo" class="title-logo">
+            <h1 style="margin:0;font-size:3rem;">幻像立方</h1>
+            <p style="opacity:0.8;margin-top:0.5rem;">国际Java版Minecraft服务器</p>
+        </div>
+
+        <!-- 链接区 -->
+        <div class="content-grid" style="grid-template-columns: 1fr;">
+            <!-- 左侧链接 -->
+            <div class="link-column">
+                <a href="https://www.yuque.com/yuqueyonghucgups9/ficcube" class="main-link" target="_blank">📚 百科文档</a>
+                <a href="https://qm.qq.com/q/GV9NgkEZUY" class="main-link" target="_blank">🐧 QQ交流群</a>
+                <a href="https://pd.qq.com/s/gymi21bmj" class="main-link" target="_blank">💬 贴吧论坛</a>
+                <a href="https://www.yuque.com/yuqueyonghucgups9/ficcube/sr73e34scft49g0w" class="main-link" target="_blank">📃 更新日志</a>
+                <a href="https://afdian.com/a/highrii" class="main-link" target="_blank">💎 赞助充值</a>
+                <a href="javascript:void(0)" onclick="showMapOptions()" class="main-link">🗺 在线地图</a>
+            </div>
+        </div>
+
+        <!-- 图集册区域 -->
+        <div class="showcase-section">
+            <div class="showcase-slider">
+                <div class="slider-container" id="sliderContainer">
+                    <div class="slider-item" style="background-image: url('https://image.8aka.org/file/1745696338979_2.png');"></div>
+                    <div class="slider-item" style="background-image: url('https://image.8aka.org/file/1745696350664_1.png');"></div>
+                    <div class="slider-item" style="background-image: url('https://image.8aka.org/file/1745696337130_3.jpg');"></div>
+                    <div class="slider-item" style="background-image: url('https://image.8aka.org/file/1745696334309_5.jpg');"></div>
+                    <div class="slider-item" style="background-image: url('https://image.8aka.org/file/1745696337117_4.jpg');"></div>
+                </div>
+                <div class="slider-nav" id="sliderNav">
+                    <div class="slider-dot" data-index="0"></div>
+                    <div class="slider-dot" data-index="1"></div>
+                    <div class="slider-dot" data-index="2"></div>
+                    <div class="slider-dot" data-index="3"></div>
+                    <div class="slider-dot" data-index="4"></div>
+                </div>
+            </div>
+            <div class="showcase-content">
+                <h2> FicCube幻像立方是什么？ </h2>
+                <p>FC是一个多元的Minecraft（JAVA版）国际版服务器群组，一个多元开放Minecraft中文游戏社区，一个精心打造的温暖有趣的游戏世界。在这里你可以:</p>
+                <p>和伙伴建造梦想家园，组建自己的团队和公会，体验多人社交的乐趣；在独特的风情世界中冒险，挑战刺激的秘境，收集各式各样的装备；参与自由的市场交易，经营生意体验写实的经济互动；按照自己的喜好装扮自己的领地，感受Minecraft最本真的乐趣。创意、冒险、合作，希望FicCube幻像立方能让你放松心情、收获友谊！</p>
+            </div>
+        </div>
+
+        <!-- 介绍内容 -->
+        <div class="intro-section">
+            <div class="features-grid">
+                <div class="feature-item">
+                    <h4>🏰 丰富社交系统</h4>
+                    <p>公会、地标、领地、经济、自由交易</p>
+                </div>
+                <div class="feature-item">
+                    <h4>🌿 养老圣地</h4>
+                    <p>农业、垂钓、酿造等等丰富养老玩法</p>
+                </div>
+                <div class="feature-item">
+                    <h4>⚔️ 冒险玩法</h4>
+                    <p>史诗地形、战斗副本、装备系统、进阶养成</p>
+                </div>
+                <div class="feature-item">
+                    <h4>🎨 原汁原味体验</h4>
+                    <p>原版材质、东方美学设计</p>
+                </div>
+                <div class="feature-item">
+                    <h4>💻 低配优化</h4>
+                    <p>原版秒进，无需等待、独家发包优化，低配畅玩</p>
+                </div>
+                <div class="feature-item">
+                    <h4>🛡️ 安全保障</h4>
+                    <p>领地保护、备份回滚、反作弊、管理监管</p>
+                </div>
+                </div>
+
+            <h2>价值观与愿景</h2>
+            <p style="text-indent: 2em;">FicCube 适合每个人；与他人一起玩游戏应该是安全和包容的，这里没有仇恨和歧视的容身之地；我们是Minecraft社区的建设者和维护者，义务地维持这个社区使其充满活力和热情。</p>
+            
+
+            <h2>关于 FicCube</h2>
+
+            <p style="text-indent: 2em;">FC是一个多元的Minecraft（JAVA版）国际版服务器群组，规划为多元开放Minecraft中文游戏社区。目前正在开发运营的是生存服，本维基也是主要针对此生存服进行编写，未来会加入更多元的玩法，为方便介绍，以下所有介绍都只针对目前正在开发运营的生存服。</p>
+
+            <blockquote>FicCube中的Fic取自Fiction意为幻像、虚构；Cube意为立方。</blockquote>
+            
+            <p style="text-indent: 2em;">服务器遵循Mojang（微软）<a href="https://www.minecraft.net/zh-hans/eula" style="color: #87CEEB;" target="_blank">EULA协议</a>和<a href="https://www.minecraft.net/zh-hans/usage-guidelines" style="color: #87CEEB;" target="_blank">Minecraft 使用准则</a>，开启Mojang（微软）账号验证程序，玩家须使用JAVA版Minecraft官方客户端进入游玩。<strong>服务器不推荐任何除Mojang官方启动器启动的原版客户端外任何第三方启动器和客户端进服游玩，详情见</strong><a href="https://www.yuque.com/yuqueyonghucgups9/ficcube/dd7tzh7n7v3lc2w8#eBLvR" style="color: #87CEEB;" target="_blank"><strong>《FC管理办法》D类条目</strong></a><strong>。</strong></p>
+            
+            <p style="text-indent: 2em;">服务器的核心在于多人游玩的体验，生存服在此做了很多。丰富社交玩法的公会、玩家传送地标、领地、经济系统、玩家交易等等；丰富在线游玩体验的签到、委托任务、称号、在线奖励等等；保证多人游戏安全性的备份回滚、反作弊、实时的在线管理员监管等等。</p>
+            
+            <p style="text-indent: 2em;">为更多丰富玩家游玩体验、展示服务器特色和平衡游戏特性，生存服在原版Minecraft玩法基础上拓展了许多，开发出类角色扮演的冒险玩法，如不同难度不同风格的战斗副本和地牢、丰富的武器装备系统、进阶式养成体系、拓展玩家属性等等，在此前提下生存服也修改了很多原版本来的玩法，如禁用了原版进度系统（成就）；修改并拓展了原版钓鱼和作物种植；修改了怪物特征及属性（部分）；修改了原版的物品及怪物掉落；重做了原版装备（部分战斗用品、工具等）的特性和属性；修改并重做了地形和群系；添加了独立于原版经验（Experience）的玩家等级系统；不同原版的独立的护甲防御机制等等。让Minecraft有更多更多新奇好玩的玩法。</p>
+            
+            <p style="text-indent: 2em;">在美学价值上，其一，FC采用原版Minecraft的材质，不强制分发"服务器专用"材质贴图，去"塑料化"，还原原汁原味的高版本Minecraft游戏纹理和材质；当然，你也可以在不影响游戏性和其他玩家正常游玩的前提下，自行搭配添加自己喜好的纹理材质；其二，FC生存服整体美学设计（包括建筑模型、场景、文学策划等）偏向东方风格，如和风的主城大厅建模设计、副本国风场景摆设、装备的命名和东方文学风格的描述等等，更多让玩家体验到FC服务器的文化，提供情绪价值。</p>
+            
+           
+        </div>
+
+        <!-- 教程区内容 -->
+        <div class="tutorial-section">
+            <div class="tutorial-content">
+                <h2>🎮 立即游玩</h2>
+                <ol class="tutorial-steps">
+                    <li>启动 Minecraft 1.20.6</li>
+                    <li>多人游戏 → 添加服务器</li>
+                    <li>地址: mc.ficcube.com</li>
+                    <li>保存并进入，开始旅程！</li>
+                </ol>
+            </div>
+            <div class="tutorial-image">
+                <img src="image/tutorial.gif" alt="加入教程" class="tutorial-gif">
+            </div>
+            <div class="warning-notice">
+                <p>⚠️ 加入FicCube服务器前请熟知<a href="https://www.yuque.com/yuqueyonghucgups9/ficcube/dd7tzh7n7v3lc2w8" target="_blank">《FC管理办法》</a>协议，当您进入服务器时即默认您已并同意该协议的全部条款，并同意承担违反相关条款可能产生的一切后果。</p>
+            </div>
+        </div>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="main-container">
+            <div style="display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap;">
+                <a href="https://space.bilibili.com/306399149" target="_blank">哔哩哔哩官方账号</a>
+                <a href="#" target="_blank">友情链接2</a>
+                <a href="#" target="_blank">友情链接3</a>
+                <a href="#" target="_blank">友情链接4</a>
+                <a href="#" target="_blank">友情链接5</a>
+            </div>
+        </div>
+        <p style="text-align: center; font-size: 0.9rem; color: var(--text-color); opacity: 0.8; padding-top: 3rem;">Copyright © 2025 Highrii</p>
+        <p style="text-align: center; font-size: 0.8rem; color: var(--text-color); opacity: 0.6;">本网站不是官方 Minecraft 网站，与 Mojang Studios 或 Microsoft 没有关联。所有产品名称和公司名称均为其各自持有者的商标或注册商标。使用这些名称并不表示与它们有任何关联或得到它们的认可。</p>
+    </footer>
+
+    <script>
+        document.getElementById('statusDetail').addEventListener('click', function() {
+            navigator.clipboard.writeText('mc.ficcube.com').then(function() {
+                const notification = document.getElementById('copyNotification');
+                notification.style.display = 'block';
+                setTimeout(function() {
+                    notification.style.display = 'none';
+                }, 2000);
+            });
+        });
+
+        document.getElementById('statusDetail').addEventListener('mouseover', function() {
+            this.style.backgroundColor = 'rgba(128, 128, 128, 0.3)';
+        });
+
+        document.getElementById('statusDetail').addEventListener('mouseout', function() {
+            this.style.backgroundColor = 'rgba(128, 128, 128, 0.2)';
+        });
+    </script>
+
+    <!-- 功能按钮组 -->
+    <div class="float-btns">
+        <button class="top-btn" id="toTop">↑</button>
+    </div>
+
+    <script>
+        // 返回顶部
+        const toTopBtn = document.getElementById('toTop');
+        window.addEventListener('scroll', () => {
+            toTopBtn.style.opacity = window.scrollY > 500 ? 1 : 0;
+        });
+        toTopBtn.addEventListener('click', () => {
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        });
+
+        // 服务器状态检测
+        async function checkStatus() {
+            try {
+                const res = await fetch('https://api.mcstatus.io/v2/status/java/hypixel.net');
+                const data = await res.json();
+                const statusEl = document.getElementById('statusDetail');
+                
+                if(data.online) {
+                    statusEl.innerHTML = `
+                        <p style="margin:0.1em;">服务器地址：mc.FicCube.com</p>
+                        <p style="color: #36bd0d; margin:0.1em;">当前在线：${data.players.online}</p>
+                    `;
+                } else {
+                    statusEl.innerHTML = `<p style="color: #F44336; margin:0;">服务器离线</p>`;
+                }
+            } catch(err) {
+                document.getElementById('statusDetail').innerHTML = `<p style="color: #FF9800;">状态检测失败</p>`;
+            }
+        }
+        checkStatus();
+
+        // 图集册轮播
+        const sliderContainer = document.getElementById('sliderContainer');
+        const sliderDots = document.querySelectorAll('.slider-dot');
+        let currentIndex = 0;
+
+        function updateSlider(index) {
+            sliderContainer.style.transform = `translateX(-${index * 100}%)`;
+            sliderDots.forEach(dot => dot.classList.remove('active'));
+            sliderDots[index].classList.add('active');
+        }
+
+        sliderDots.forEach(dot => {
+            dot.addEventListener('click', () => {
+                currentIndex = parseInt(dot.getAttribute('data-index'));
+                updateSlider(currentIndex);
+            });
+        });
+
+        setInterval(() => {
+            currentIndex = (currentIndex + 1) % sliderDots.length;
+            updateSlider(currentIndex);
+        }, 5000);
+
+        // 二维码弹窗控制
+        function showQRCode(type) {
+            const overlay = document.getElementById('modalOverlay');
+            const qrCode = document.getElementById(type + 'QR');
+            
+            overlay.style.display = 'block';
+            void overlay.offsetWidth;
+            overlay.classList.add('active');
+            
+            qrCode.style.display = 'block';
+            void qrCode.offsetWidth;
+            qrCode.classList.add('active');
+        }
+        
+        // 地图选项弹窗控制
+        function showMapOptions() {
+            const overlay = document.getElementById('modalOverlay');
+            const mapOptions = document.getElementById('mapOptionsPopup');
+            
+            overlay.style.display = 'block';
+            void overlay.offsetWidth;
+            overlay.classList.add('active');
+            
+            mapOptions.style.display = 'block';
+            void mapOptions.offsetWidth;
+            mapOptions.classList.add('active');
+        }
+
+        function hideQRCode() {
+            const overlay = document.getElementById('modalOverlay');
+            const qrCodes = document.querySelectorAll('.qrcode-popup');
+            
+            overlay.classList.remove('active');
+            qrCodes.forEach(qr => qr.classList.remove('active'));
+            
+            setTimeout(() => {
+                overlay.style.display = 'none';
+                qrCodes.forEach(qr => qr.style.display = 'none');
+            }, 300);
+        }
+
+        // 点击遮罩层关闭弹窗
+        document.getElementById('modalOverlay').addEventListener('click', hideQRCode);
+    </script>
+</body>
+</html>
