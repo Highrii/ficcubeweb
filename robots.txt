@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://ficcube.com/sitemap.xml
