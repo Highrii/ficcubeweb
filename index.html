@@ -318,19 +318,21 @@
             background: var(--tutorial-bg);
             backdrop-filter: blur(8px);
             border-radius: 16px;
-            padding: 2rem;
+            padding: 1rem 2rem 1rem 2rem;
             margin-top: 2rem;
             color: var(--intro-text);
+            line-height: 1.5;
+            text-align: start;
         }
 
-        .intro-section p {
-            line-height: 1.8;
-            margin: 0.5rem 0;
-            text-align: justify;
-        }
-        
-        .intro-section h2 {
-            margin-bottom: 0.5rem;
+        .video-section{
+            background: var(--tutorial-bg);
+            backdrop-filter: blur(8px);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            color: var(--intro-text);
+            line-height: 1.9;
         }
 
         .value-card {
@@ -379,7 +381,7 @@
             background: var(--tutorial-bg);
             backdrop-filter: blur(8px);
             border-radius: 16px;
-            padding: 2rem;
+            padding: 1.5rem;
         }
 
         .showcase-slider {
@@ -435,7 +437,7 @@
 
         .showcase-content p {
             margin: 0.1rem 0;  /* 减小段落间距 */
-            line-height: 1.5;  /* 适当减小行高 */
+            line-height: 1.7;  /* 适当减小行高 */
             font-size: 0.9rem;  /* 减小正文字号 */
         }
 
@@ -547,6 +549,24 @@
 
             .tutorial-section {
                 padding: 1rem;
+            }
+            
+            /* 视频区域移动端适配 */
+            .video-container {
+                margin: 1rem 0 !important;
+            }
+            
+            /* 视频区域网格布局在移动端改为垂直堆叠 */
+            .video-section > div {
+                display: grid;
+                grid-template-columns: 1fr !important;
+                gap: 1rem !important;
+            }
+
+            .intro-section > div {
+                display: grid;
+                grid-template-columns: 1fr !important;
+                gap: 1rem !important;
             }
 
             .tutorial-content, .tutorial-image {
@@ -697,6 +717,7 @@
             </div>
         </div>
 
+
         <!-- 图集册区域 -->
         <div class="showcase-section">
             <div class="showcase-slider">
@@ -716,9 +737,34 @@
                 </div>
             </div>
             <div class="showcase-content">
-                <h2> FicCube幻像立方是什么？ </h2>
-                <p>FC是一个多元的Minecraft（JAVA版）国际版服务器群组，一个多元开放Minecraft中文游戏社区，一个精心打造的温暖有趣的游戏世界。在这里你可以:</p>
-                <p>和伙伴建造梦想家园，组建自己的团队和公会，体验多人社交的乐趣；在独特的风情世界中冒险，挑战刺激的秘境，收集各式各样的装备；参与自由的市场交易，经营生意体验写实的经济互动；按照自己的喜好装扮自己的领地，感受Minecraft最本真的乐趣。创意、冒险、合作，希望FicCube幻像立方能让你放松心情、收获友谊！</p>
+                <h2>❓ FicCube幻像立方是什么</h2>
+                <p style="text-indent: 2em;">FicCube中的Fic取自Fiction意为幻像、虚构；Cube意为立方。FC是一个多元的Minecraft（JAVA版）国际版服务器群组，一个多元开放Minecraft中文游戏社区，一个精心打造的温暖有趣的游戏世界。在这里你可以:</p>
+                <p style="text-indent: 2em;">和伙伴建造梦想家园，组建自己的团队和公会，体验多人社交的乐趣；在独特的风情世界中冒险，挑战刺激的秘境，收集各式各样的装备；参与自由的市场交易，经营生意体验写实的经济互动；按照自己的喜好装扮自己的领地，感受Minecraft最本真的乐趣。创意、冒险、合作，希望FicCube幻像立方能让你放松心情、收获友谊！</p>
+            </div>
+        </div>
+
+        <!-- bili视频区 -->
+        <div class="video-section">
+            <!-- <h2>🎬 精彩视频</h2> -->
+            <div style="display: grid; grid-template-columns: 1fr 1.7fr; gap: 3rem; align-items: center;">
+                
+                <!-- <div class="video-description" style="background: var(--feature-bg); padding: 1.5rem; border-radius: 8px; height: fit-content;"> -->
+                <div>
+                    <h2>📺 最新宣传影片</h2>
+                    <p style="text-indent: 2em; margin-top: 2rem;">欢迎观看影片来了解服务器的玩法、场景、最新动态和活动。另外作为主要的宣传媒介，希望新老玩家和粉丝朋友为我们的影片频道“三连”推流，让更多喜欢多人游戏的玩家了解并加入FicCube。</p>
+                    <p style="text-indent: 2em">想要了解更多精彩内容，请关注我们的<a href="https://space.bilibili.com/306399149" target="_blank" style="color: var(--link-hover);">哔哩官方频道</a>。</p>
+                </div>
+                
+                <div class="video-container" style="position: relative; width: 100%; padding-bottom: 56.25%; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
+                    <iframe 
+                        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" 
+                        src="https://player.bilibili.com/player.html?isOutside=true&aid=1705321049&bvid=BV1pT421v71E&cid=1573441095&p=1" 
+                        scrolling="no" 
+                        frameborder="no" 
+                        framespacing="0" 
+                        allowfullscreen="true">
+                    </iframe>
+                </div>
             </div>
         </div>
 
@@ -751,23 +797,22 @@
                 </div>
                 </div>
 
-            <h2>价值观与愿景</h2>
-            <p style="text-indent: 2em;">FicCube 适合每个人；与他人一起玩游戏应该是安全和包容的，这里没有仇恨和歧视的容身之地；我们是Minecraft社区的建设者和维护者，义务地维持这个社区使其充满活力和热情。</p>
+            <h2 style="margin: 0.2em;">价值观与愿景</h2>
+            
+            <p style="text-indent: 2em; margin: 0.2em;">FicCube 适合每个人；与他人一起玩游戏应该是安全和包容的，这里没有仇恨和歧视的容身之地；我们是Minecraft社区的建设者和维护者，义务地维持这个社区使其充满活力和热情。</p>
             
 
-            <h2>关于 FicCube</h2>
+            <h2 style="margin-bottom: 0.2em;">关于 FicCube</h2>
 
-            <p style="text-indent: 2em;">FC是一个多元的Minecraft（JAVA版）国际版服务器群组，规划为多元开放Minecraft中文游戏社区。目前正在开发运营的是生存服，本维基也是主要针对此生存服进行编写，未来会加入更多元的玩法，为方便介绍，以下所有介绍都只针对目前正在开发运营的生存服。</p>
-
-            <blockquote>FicCube中的Fic取自Fiction意为幻像、虚构；Cube意为立方。</blockquote>
+            <p style="text-indent: 2em; margin: 0.2em;">FC是一个多元的Minecraft（JAVA版）国际版服务器群组，规划为多元开放Minecraft中文游戏社区。目前正在开发运营的是生存服，本网站内容也是主要针对此生存服进行编写，未来会加入更多元的玩法，为方便介绍，以下所有介绍都只针对目前正在开发运营的生存服。</p>
             
-            <p style="text-indent: 2em;">服务器遵循Mojang（微软）<a href="https://www.minecraft.net/zh-hans/eula" style="color: #87CEEB;" target="_blank">EULA协议</a>和<a href="https://www.minecraft.net/zh-hans/usage-guidelines" style="color: #87CEEB;" target="_blank">Minecraft 使用准则</a>，开启Mojang（微软）账号验证程序，玩家须使用JAVA版Minecraft官方客户端进入游玩。<strong>服务器不推荐任何除Mojang官方启动器启动的原版客户端外任何第三方启动器和客户端进服游玩，详情见</strong><a href="https://www.yuque.com/yuqueyonghucgups9/ficcube/dd7tzh7n7v3lc2w8#eBLvR" style="color: #87CEEB;" target="_blank"><strong>《FC管理办法》D类条目</strong></a><strong>。</strong></p>
+            <p style="text-indent: 2em; margin: 0.2em;">服务器遵循Mojang（微软）<a href="https://www.minecraft.net/zh-hans/eula" style="color: #87CEEB;" target="_blank">EULA协议</a>和<a href="https://www.minecraft.net/zh-hans/usage-guidelines" style="color: #87CEEB;" target="_blank">Minecraft 使用准则</a>，开启Mojang（微软）账号验证程序，玩家须使用JAVA版Minecraft官方客户端进入游玩。<strong>服务器不推荐任何除Mojang官方启动器启动的原版客户端外任何第三方启动器和客户端进服游玩，详情见</strong><a href="https://www.yuque.com/yuqueyonghucgups9/ficcube/dd7tzh7n7v3lc2w8#eBLvR" style="color: #87CEEB;" target="_blank"><strong>《FC管理办法》D类条目</strong></a><strong>。</strong></p>
             
-            <p style="text-indent: 2em;">服务器的核心在于多人游玩的体验，生存服在此做了很多。丰富社交玩法的公会、玩家传送地标、领地、经济系统、玩家交易等等；丰富在线游玩体验的签到、委托任务、称号、在线奖励等等；保证多人游戏安全性的备份回滚、反作弊、实时的在线管理员监管等等。</p>
+            <p style="text-indent: 2em; margin: 0.2em;">服务器的核心在于多人游玩的体验，生存服在此做了很多。丰富社交玩法的公会、玩家传送地标、领地、经济系统、玩家交易等等；丰富在线游玩体验的签到、委托任务、称号、在线奖励等等；保证多人游戏安全性的备份回滚、反作弊、实时的在线管理员监管等等。</p>
             
-            <p style="text-indent: 2em;">为更多丰富玩家游玩体验、展示服务器特色和平衡游戏特性，生存服在原版Minecraft玩法基础上拓展了许多，开发出类角色扮演的冒险玩法，如不同难度不同风格的战斗副本和地牢、丰富的武器装备系统、进阶式养成体系、拓展玩家属性等等，在此前提下生存服也修改了很多原版本来的玩法，如禁用了原版进度系统（成就）；修改并拓展了原版钓鱼和作物种植；修改了怪物特征及属性（部分）；修改了原版的物品及怪物掉落；重做了原版装备（部分战斗用品、工具等）的特性和属性；修改并重做了地形和群系；添加了独立于原版经验（Experience）的玩家等级系统；不同原版的独立的护甲防御机制等等。让Minecraft有更多更多新奇好玩的玩法。</p>
+            <p style="text-indent: 2em; margin: 0.2em;">为更多丰富玩家游玩体验、展示服务器特色和平衡游戏特性，生存服在原版Minecraft玩法基础上拓展了许多，开发出类角色扮演的冒险玩法，如不同难度不同风格的战斗副本和地牢、丰富的武器装备系统、进阶式养成体系、拓展玩家属性等等，在此前提下生存服也修改了很多原版本来的玩法，如禁用了原版进度系统（成就）；修改并拓展了原版钓鱼和作物种植；修改了怪物特征及属性（部分）；修改了原版的物品及怪物掉落；重做了原版装备（部分战斗用品、工具等）的特性和属性；修改并重做了地形和群系；添加了独立于原版经验（Experience）的玩家等级系统；不同原版的独立的护甲防御机制等等。让Minecraft有更多更多新奇好玩的玩法。</p>
             
-            <p style="text-indent: 2em;">在美学价值上，其一，FC采用原版Minecraft的材质，不强制分发"服务器专用"材质贴图，去"塑料化"，还原原汁原味的高版本Minecraft游戏纹理和材质；当然，你也可以在不影响游戏性和其他玩家正常游玩的前提下，自行搭配添加自己喜好的纹理材质；其二，FC生存服整体美学设计（包括建筑模型、场景、文学策划等）偏向东方风格，如和风的主城大厅建模设计、副本国风场景摆设、装备的命名和东方文学风格的描述等等，更多让玩家体验到FC服务器的文化，提供情绪价值。</p>
+            <p style="text-indent: 2em; margin: 0.2em;">在美学价值上，其一，FC采用原版Minecraft的材质，不强制分发"服务器专用"材质贴图，去"塑料化"，还原原汁原味的高版本Minecraft游戏纹理和材质；当然，你也可以在不影响游戏性和其他玩家正常游玩的前提下，自行搭配添加自己喜好的纹理材质；其二，FC生存服整体美学设计（包括建筑模型、场景、文学策划等）偏向东方风格，如和风的主城大厅建模设计、副本国风场景摆设、装备的命名和东方文学风格的描述等等，更多让玩家体验到FC服务器的文化，提供情绪价值。</p>
             
            
         </div>
