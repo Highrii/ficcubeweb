@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>招聘简章</title>
+    <link rel="icon" href="image/logo64.png" type="image/png">
+    <style>
+        :root {
+            --bg-color: #1a1a1a;
+            --text-color: #e0e0e0;
+            --card-bg: #2d2d2d;
+            --primary: #4e545a;
+            --hover: #5a6268;
+            --gradient-text: #ffffff;
+            --intro-text: #f0f0f0;
+            --tutorial-bg: rgba(0, 0, 0, 0.4);
+            --feature-bg: rgba(255, 255, 255, 0.05);
+            --popup-bg: rgba(45, 45, 45, 0.9);
+            --header-bg: rgba(0, 0, 0, 0.2);
+            --link-color: #e0e0e0;
+            --link-hover: rgb(0, 187, 255);
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        /* 背景图层 */
+        .background-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url('image/bg.jpg');
+            background-size: cover;
+            background-position: center;
+            filter: blur(7px);
+            z-index: -1;
+            opacity: 1;
+            transition: opacity 0.5s;
+        }
+
+        /* 返回按钮 */
+        .back-btn {
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            z-index: 1000;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .back-btn:hover {
+            background: var(--hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin-top: 5rem;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 2rem;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .content-card {
+            background: var(--tutorial-bg);
+            backdrop-filter: blur(8px);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-top: 2rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+
+        /* 标题区域 */
+        .title-section {
+            position: relative;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .title-logo {
+            position: absolute;
+            top: -130px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 320px;
+            height: auto;
+            opacity: 0.8;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .title-logo:hover {
+            opacity: 1;
+            transform: translateX(-50%) scale(1.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: var(--gradient-text);
+            margin-bottom: 2rem;
+            font-size: 2.5em;
+            background: linear-gradient(135deg, var(--gradient-text) 0%, var(--gradient-text) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            border-bottom: 2px solid var(--link-hover);
+            padding-bottom: 1rem;
+            margin-top: 60px; /* 为logo留出空间 */
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 2rem;
+            font-size: 14px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        th, td {
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        /* 岗位列居中对齐 */
+        th:first-child, td:first-child {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        th {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--hover) 100%);
+            color: white;
+            font-weight: bold;
+            text-align: center;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+
+        tbody tr:nth-child(odd) {
+            background-color: rgba(255, 255, 255, 0.02);
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        tbody tr:hover {
+            background-color: rgba(0, 187, 255, 0.1);
+            transition: background-color 0.3s ease;
+        }
+
+        ul {
+            padding-left: 1.5rem;
+            margin: 0;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+            color: var(--intro-text);
+        }
+
+        strong {
+            color: var(--link-hover);
+            font-weight: bold;
+        }
+
+        .notes {
+            background: rgba(0, 187, 255, 0.1);
+            border-left: 5px solid var(--link-hover);
+            padding: 1.5rem;
+            margin-top: 2rem;
+            border-radius: 8px;
+            backdrop-filter: blur(8px);
+        }
+
+        .notes p {
+            margin: 0;
+            font-weight: bold;
+            color: var(--link-hover);
+            font-size: 1.1em;
+        }
+
+        .notes span {
+            display: block;
+            margin-top: 0.5rem;
+            font-weight: normal;
+            color: var(--intro-text);
+            line-height: 1.6;
+        }
+
+        /* 页脚 */
+        .footer {
+            margin-top: 4rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--primary);
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+
+            .footer {
+                padding-top: 1rem;
+            }
+
+            .back-btn {
+                top: 1rem;
+                left: 1rem;
+                padding: 0.6rem 1rem;
+                font-size: 0.8rem;
+            }
+
+            .container {
+                padding: 1rem;
+                margin-top: 5rem;
+            }
+            
+            .content-card {
+                padding: 1rem;
+            }
+            
+            h2 {
+                font-size: 1.8em;
+                margin-top: 60px;
+            }
+
+            .title-logo {
+                width: 220px;
+                top: -90px;
+            }
+            
+            table {
+                font-size: 11px;
+                transform: scale(0.9);
+                transform-origin: top left;
+                width: 111.11%; /* 补偿缩放 */
+                margin-bottom: 0rem;
+            }
+            
+            th, td {
+                padding: 0.4rem;
+            }
+
+            ul {
+                padding-left: 1rem;
+            }
+
+            li {
+                font-size: 10px;
+                margin-bottom: 0.3rem;
+            }
+
+            .notes {
+                padding: 1rem;
+            }
+
+            .notes span {
+                font-size: 0.9em;
+            }
+        }
+
+        @media (max-width: 480px) {
+
+            .footer {
+                padding-top: 1rem;
+            }
+
+            .back-btn {
+                top: 0.5rem;
+                left: 0.5rem;
+                padding: 0.5rem 0.8rem;
+                font-size: 0.7rem;
+            }
+
+            .container {
+                padding: 0.5rem;
+                margin-top: 3rem;
+            }
+
+            .content-card {
+                padding: 0.8rem;
+            }
+
+            h2 {
+                font-size: 1.5em;
+                margin-top: 50px;
+            }
+
+            .title-logo {
+                width: 220px;
+                top: -90px;
+            }
+
+            table {
+                font-size: 9px;
+                transform: scale(0.75);
+                transform-origin: top left;
+                width: 133.33%; /* 补偿缩放 */
+                margin-bottom: -8rem;
+            }
+
+            th, td {
+                padding: 0.3rem;
+            }
+
+            ul {
+                padding-left: 0.8rem;
+            }
+
+            li {
+                font-size: 8px;
+                margin-bottom: 0.2rem;
+            }
+
+            .notes {
+                padding: 0.8rem;
+            }
+
+            .notes span {
+                font-size: 0.8em;
+            }
+        }
+
+        @media (max-width: 360px) {
+
+            .footer {
+                padding-top: 1rem;
+            }
+
+            .title-logo {
+                width: 220px;
+                top: -90px;
+            }
+
+            h2 {
+                margin-top: 40px;
+            }
+
+            table {
+                font-size: 8px;
+                transform: scale(0.65);
+                transform-origin: top left;
+                width: 153.85%; /* 补偿缩放 */
+                margin-bottom: -12rem;
+            }
+
+            th, td {
+                padding: 0.2rem;
+            }
+
+            li {
+                font-size: 7px;
+                margin-bottom: 0.15rem;
+            }
+        }
+
+        /* 添加一些动画效果 */
+        .content-card {
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 表格行悬停效果增强 */
+        tbody tr {
+            transition: all 0.3s ease;
+        }
+
+        tbody tr:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 187, 255, 0.2);
+        }
+    </style>
+</head>
+<body>
+
+<div class="background-layer"></div>
+
+<!-- 返回官网按钮 -->
+<button class="back-btn" onclick="window.location.href='index.html'">← 返回官网</button>
+
+<div class="container">
+    <div class="content-card">
+        <div class="title-section">
+            <img src="image/logo700.png" alt="幻像立方Logo" class="title-logo">
+            <h2>幻像立方团队招聘简章</h2>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>岗位</th>
+                    <th>主要职责</th>
+                    <th>资历要求</th>
+                    <th>工作内容</th>
+                    <th>薪资</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- <tr>
+                    <td><strong>BOSS岗</strong> (0位)</td>
+                    <td>总策划、软件技术开发、财务、人事决策、服务器运维、网站运维。</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                </tr> -->
+                <tr>
+                    <td><strong>后勤岗</strong></td>
+                    <td>软件技术协助（插件配置）、维基文档运维。</td>
+                    <td>
+                        <ul>
+                            <li>热爱MC游戏，资深玩家，有较长的MC多人游戏服务器游玩经历；</li>
+                            <li>有较强的学习能力；</li>
+                            <li>了解MC服务器开发相关知识；</li>
+                            <li>待人亲和，服从管理；</li>
+                            <li>有开服经历或曾参与过此种工作的优先。</li>
+                        </ul>
+                    </td>
+                    <td>
+                        <ul>
+                            <li>技术协助（如插件配置、漏洞测试等）；</li>
+                            <li>维基文档维护更新；</li>
+                            <li>更新日志等公告撰写；</li>
+                            <li>协助管理；</li>
+                            <li>兼任客服。</li>
+                        </ul>
+                    </td>
+                    <td>按具体能力及工作量面议</td>
+                </tr>
+                <tr>
+                    <td><strong>宣传岗</strong></td>
+                    <td>宣传（视频剪辑制作、账号运营）。</td>
+                    <td>
+                        <ul>
+                            <li>热爱MC游戏，资深玩家，有较长的MC多人游戏服务器游玩经历；</li>
+                            <li>精通剪辑软件；</li>
+                            <li>有B站账号运营经历；</li>
+                            <li>待人亲和，服从管理；</li>
+                            <li>有网感，有较强的学习能力；</li>
+                            <li>擅长网络公关；</li>
+                            <li>视频制作技能较强的、了解MC相关视频制作技巧的优先。</li>
+                        </ul>
+                    </td>
+                    <td>
+                        <ul>
+                            <li>每周制作一条2分钟以上的服务器相关视频用于服务器宣传；</li>
+                            <li>负责流媒体账号（Bilibili、小红书）运营管理。</li>
+                        </ul>
+                    </td>
+                    <td>
+                        <ul>
+                            <li><strong>底薪：</strong>400-600元/月（依视频质量和宣传效果浮动）；</li>
+                            <li><strong>奖金：</strong>宣传效果极佳或爆款视频，有额外薪酬（单品视频播放量破5000，即时额外获酬至少100元）。</li>
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>客服岗</strong></td>
+                    <td>客服管理。</td>
+                    <td>
+                        <ul>
+                            <li>热爱MC游戏，资深玩家，有较长的MC多人游戏服务器游玩经历；</li>
+                            <li>待人亲和，服从管理；</li>
+                            <li>擅长网络公关及社交媒体管理运营（QQ群、KOOK群等）；</li>
+                            <li>有较强的引导、组织能力；</li>
+                            <li>有较长的线上在线时长；</li>
+                            <li>有管理员经历或曾参与过此种工作的优先。</li>
+                        </ul>
+                    </td>
+                    <td>
+                        <ul>
+                            <li>负责社交群聊（QQ群、QQ频道）运营管理；</li>
+                            <li>参与玩家在群聊中的问答及新人引导；</li>
+                            <li>参与游戏局内的组织和监管（包括组织活动、赛博巡逻和作弊判罚）。</li>
+                        </ul>
+                    </td>
+                    <td>按具体能力及工作量面议</td>
+                </tr>
+                <tr style="background-color: rgba(0, 187, 255, 0.1); border-left: 5px solid var(--link-hover);">
+                    <td colspan="5" style="text-align: center; padding: 1.5rem; font-weight: bold; color: var(--link-hover);">
+                        通用要求：以上岗位不限性别，不限学历，线上办公，可兼职，年龄要求18周岁及以上，能够线上语音交流（如参与语音会议等）。
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+    <!-- 页脚 -->
+<footer class="footer">
+    <p style="text-align: center; font-size: 0.9rem; color: var(--text-color); opacity: 0.8; padding-top: 3rem;">Copyright © 2025 Highrii</p>
+    <p style="text-align: center; font-size: 0.8rem; color: var(--text-color); opacity: 0.6;">本网站不是官方 Minecraft 网站，与 Mojang Studios 或 Microsoft 没有关联。所有产品名称和公司名称均为其各自持有者的商标或注册商标。使用这些名称并不表示与它们有任何关联或得到它们的认可。</p>
+</footer>
+
+</body>
+</html>
