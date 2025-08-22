@@ -918,7 +918,7 @@
         // 服务器状态检测
         async function checkStatus() {
             try {
-                const res = await fetch('https://api.mcstatus.io/v2/status/java/hypixel.net');
+                const res = await fetch('https://api.mcstatus.io/v2/status/java/mc.ficcube.com');
                 const data = await res.json();
                 const statusEl = document.getElementById('statusDetail');
                 
